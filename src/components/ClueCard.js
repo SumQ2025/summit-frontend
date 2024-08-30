@@ -70,7 +70,7 @@ const ClueCard = () => {
         className="hidden"
         ref={fileRef}
       />
-      <img src={`https://aqueous-plains-92900-147f689c2375.herokuapp.com/uploads/${filename}`} />
+      <img src={`http://localhost:5000/uploads/${filename}`} />
     </div>
   );
 };

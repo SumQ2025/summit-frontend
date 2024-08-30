@@ -11,8 +11,8 @@ const initialState = {
 export const uploadPhoto = createAsyncThunk("uploadPhoto", async (formData) => {
   try {
     const response = await axios.post(
-        "https://aqueous-plains-92900-147f689c2375.herokuapp.com/upload",
-    //   "http://localhost:5000/upload",
+      //   "https://aqueous-plains-92900-147f689c2375.herokuapp.com/upload",
+      "http://localhost:5000/upload",
       formData,
       {
         headers: {
