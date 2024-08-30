@@ -5,12 +5,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
   clues: [],
+  filename: "",
 };
 
 export const uploadPhoto = createAsyncThunk("uploadPhoto", async (formData) => {
   try {
     const response = await axios.post(
-      "https://aqueous-plains-92900-147f689c2375.herokuapp.com/upload",
+        "https://aqueous-plains-92900-147f689c2375.herokuapp.com/upload",
     //   "http://localhost:5000/upload",
       formData,
       {
@@ -19,6 +20,7 @@ export const uploadPhoto = createAsyncThunk("uploadPhoto", async (formData) => {
         },
       }
     );
+    return response.data.filename;
     console.log("File uploaded successfully:", response.data);
   } catch (error) {
     console.error("Error uploading file:", error);
@@ -32,7 +34,8 @@ export const clueSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(uploadPhoto.fulfilled, (state, action) => {
       state.status = "succeeded";
-    //   state.clues = action.payload.clues;
+      state.filename = action.payload;
+      //   state.clues = action.payload.clues;
     });
   },
 });

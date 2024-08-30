@@ -8,6 +8,7 @@ const ClueCard = () => {
   const [file, setFile] = useState(null);
   const fileRef = useRef(null);
   const dispatch = useDispatch();
+  const filename = useSelector((state) => state.clue.filename);
 
   useEffect(() => {
     async function upload() {
@@ -69,6 +70,7 @@ const ClueCard = () => {
         className="hidden"
         ref={fileRef}
       />
+      <img src={`https://aqueous-plains-92900-147f689c2375.herokuapp.com/uploads/${filename}`} />
     </div>
   );
 };
