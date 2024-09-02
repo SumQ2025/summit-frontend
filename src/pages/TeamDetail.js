@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
@@ -19,6 +20,9 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
+import Switch from "@mui/material/Switch";
+
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const TablePaginationActions = (props) => {
   const theme = useTheme();
@@ -99,14 +103,73 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-const Location = () => {
+const IOSSwitch = styled((props) => (
+  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+))(({ theme }) => ({
+  width: 62,
+  height: 36,
+  padding: 0,
+  "& .MuiSwitch-switchBase": {
+    padding: 0,
+    margin: 2,
+    transitionDuration: "300ms",
+    "&.Mui-checked": {
+      transform: "translateX(27px)",
+      color: "#fff",
+      "& + .MuiSwitch-track": {
+        backgroundColor: "#1d488b",
+        opacity: 1,
+        border: 0,
+        ...theme.applyStyles("dark", {
+          backgroundColor: "#2ECA45",
+        }),
+      },
+      "&.Mui-disabled + .MuiSwitch-track": {
+        opacity: 0.5,
+      },
+    },
+    "&.Mui-focusVisible .MuiSwitch-thumb": {
+      color: "#33cf4d",
+      border: "6px solid #fff",
+    },
+    "&.Mui-disabled .MuiSwitch-thumb": {
+      color: theme.palette.grey[100],
+      ...theme.applyStyles("dark", {
+        color: theme.palette.grey[600],
+      }),
+    },
+    "&.Mui-disabled + .MuiSwitch-track": {
+      opacity: 0.7,
+      ...theme.applyStyles("dark", {
+        opacity: 0.3,
+      }),
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    boxSizing: "border-box",
+    width: 32,
+    height: 32,
+  },
+  "& .MuiSwitch-track": {
+    borderRadius: 36 / 2,
+    backgroundColor: "#E9E9EA",
+    opacity: 1,
+    transition: theme.transitions.create(["background-color"], {
+      duration: 500,
+    }),
+    ...theme.applyStyles("dark", {
+      backgroundColor: "#39393D",
+    }),
+  },
+}));
+
+const TeamDetail = () => {
+  const location = useLocation();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [locations, setLocations] = useState([]);
+  const { teamId } = location.state;
 
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - locations.length) : 0;
 
@@ -119,19 +182,36 @@ const Location = () => {
     setPage(0);
   };
 
-  const deleteLocation = async (id) => {
+  const handleSwitch = async (id) => {
+    const updatedLocations = locations.map((location) => {
+      if (location._id === id) {
+        return { ...location, checked: !location.checked };
+      }
+      return location;
+    });
+    setLocations(updatedLocations);
+  };
+
+  const saveTeamDetail = async () => {
     const param = {
-      id: id,
+      locations,
+      teamId,
     };
-    const response = await axios.post(`${SERVER_URL}/deleteLocation`, param);
+    const response = await axios.post(`${SERVER_URL}/saveTeamDetail`, param);
     if (response.data.message === "success") {
-      setLocations(response.data.locations);
+      window.location.href = "/admin/team";
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${SERVER_URL}/getLocations`);
+      const param = {
+        teamId,
+      };
+      const response = await axios.post(
+        `${SERVER_URL}/getLocationsById`,
+        param
+      );
       setLocations(response.data.locations);
     };
 
@@ -145,10 +225,8 @@ const Location = () => {
           <TableHead>
             <TableRow>
               <StyledTableCell>No</StyledTableCell>
-              <StyledTableCell sx={{ width: "100px" }} align="center">
-                Location Name
-              </StyledTableCell>
-              <StyledTableCell align="center">Action</StyledTableCell>
+              <StyledTableCell align="center">Location Name</StyledTableCell>
+              <StyledTableCell align="center">Enable / Disable</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -160,21 +238,20 @@ const Location = () => {
               : locations
             ).map((location, index) => (
               <TableRow key={index}>
-                <TableCell component="th" scope="row" sx={{ width: "70px" }}>
+                <TableCell component="th" scope="row" sx={{ width: "100px" }}>
                   {index + 1}
                 </TableCell>
-                <TableCell align="center">{location.name}</TableCell>
-                <TableCell align="center" sx={{ width: "120px" }}>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                    onClick={() => {
-                      deleteLocation(location._id);
+                <TableCell sx={{ width: "200px" }} align="center">
+                  {location.name}
+                </TableCell>
+                <TableCell align="center">
+                  <IOSSwitch
+                    sx={{ m: 1 }}
+                    checked={location.checked === true ? true : false}
+                    onChange={() => {
+                      handleSwitch(location._id);
                     }}
-                  >
-                    Delete
-                  </Button>
+                  />
                 </TableCell>
               </TableRow>
             ))}
@@ -184,27 +261,18 @@ const Location = () => {
               </TableRow>
             )}
           </TableBody>
-
           <TableFooter>
             <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={4}
-                count={locations.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                slotProps={{
-                  select: {
-                    inputProps: {
-                      "aria-label": "rows per page",
-                    },
-                    native: true,
-                  },
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
+              <TableCell align="right" colSpan={3}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  size="small"
+                  onClick={saveTeamDetail}
+                >
+                  Save
+                </Button>
+              </TableCell>
             </TableRow>
           </TableFooter>
         </Table>
@@ -213,4 +281,4 @@ const Location = () => {
   );
 };
 
-export default Location;
+export default TeamDetail;

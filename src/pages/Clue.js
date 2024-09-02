@@ -118,7 +118,15 @@ const Clue = () => {
     setPage(0);
   };
 
-  const deleteClue = async (clueId) => {};
+  const deleteClue = async (clueId) => {
+    const param = {
+      id: clueId,
+    };
+    const response = await axios.post(`${SERVER_URL}/deleteClue`, param);
+    if (response.data.message === "success") {
+      setClues(response.data.clues);
+    }
+  };
 
   useEffect(() => {
     const fetchClues = async () => {
@@ -131,18 +139,18 @@ const Clue = () => {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-[95%]">
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
               <StyledTableCell>No</StyledTableCell>
-              <StyledTableCell>Location Name</StyledTableCell>
-              <StyledTableCell>Title</StyledTableCell>
-              <StyledTableCell>Value</StyledTableCell>
-              <StyledTableCell>Description</StyledTableCell>
-              <StyledTableCell>Image</StyledTableCell>
-              <StyledTableCell>Action</StyledTableCell>
+              <StyledTableCell align="center">Location Name</StyledTableCell>
+              <StyledTableCell align="center">Title</StyledTableCell>
+              <StyledTableCell align="center">Value</StyledTableCell>
+              <StyledTableCell align="center">Description</StyledTableCell>
+              <StyledTableCell align="center">Image</StyledTableCell>
+              <StyledTableCell align="center">Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -157,19 +165,19 @@ const Clue = () => {
                 <TableCell component="th" scope="row" sx={{ width: "100px" }}>
                   {index + 1}
                 </TableCell>
-                <TableCell sx={{ width: "200px" }}>
+                <TableCell sx={{ width: "200px" }} align="center">
                   {clue.locationId.name}
                 </TableCell>
-                <TableCell>{clue.title}</TableCell>
-                <TableCell>{clue.point}</TableCell>
-                <TableCell sx={{ width: "400px" }}>
+                <TableCell align="center">{clue.title}</TableCell>
+                <TableCell align="center">{clue.point}</TableCell>
+                <TableCell sx={{ width: "700px" }} align="center">
                   {clue.description}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center" sx={{ width: "100px" }}>
                   <img
                     src={`${SERVER_URL}/uploads/${clue.path}`}
                     alt="clue_img"
-                    className="w-[80px]"
+                    className="w-[70px]"
                   />
                 </TableCell>
                 <TableCell align="center">

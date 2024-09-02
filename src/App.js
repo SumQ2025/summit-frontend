@@ -11,6 +11,7 @@ import Location from "./pages/Location";
 import Clue from "./pages/Clue";
 import Photo from "./pages/Photo";
 import Team from "./pages/Team";
+import TeamDetail from "./pages/TeamDetail";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="clue" element={<Clue />} />
           <Route path="photo" element={<Photo />} />
           <Route path="team" element={<Team />} />
+          <Route path="team-detail" element={<TeamDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>
