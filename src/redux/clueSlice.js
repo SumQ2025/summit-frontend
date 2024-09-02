@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const initialState = {
   clues: [],
@@ -12,18 +12,17 @@ export const uploadPhoto = createAsyncThunk("uploadPhoto", async (formData) => {
   try {
     const response = await axios.post(
       //   "https://aqueous-plains-92900-147f689c2375.herokuapp.com/upload",
-      "http://localhost:5000/upload",
+      `${SERVER_URL}/upload`,
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data", // Important for file upload
+          "Content-Type": "multipart/form-data",
         },
       }
     );
     return response.data.filename;
-    console.log("File uploaded successfully:", response.data);
   } catch (error) {
-    console.error("Error uploading file:", error);
+    console.log("Error uploading file:", error);
   }
 });
 

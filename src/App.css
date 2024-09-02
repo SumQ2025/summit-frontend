@@ -40,3 +40,8 @@
     transform: rotate(360deg);
   }
 }
+
+.sidebar-active {
+  background: #27a9e3;
+  color: white;
+}

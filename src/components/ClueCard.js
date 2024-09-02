@@ -10,6 +10,8 @@ const ClueCard = () => {
   const dispatch = useDispatch();
   const filename = useSelector((state) => state.clue.filename);
 
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
   useEffect(() => {
     async function upload() {
       if (!file) {
@@ -17,7 +19,7 @@ const ClueCard = () => {
         return;
       }
       const formData = new FormData();
-      formData.append("file", file); // Append the selected file to the form data
+      formData.append("file", file);
       dispatch(uploadPhoto(formData));
     }
 
@@ -70,7 +72,7 @@ const ClueCard = () => {
         className="hidden"
         ref={fileRef}
       />
-      <img src={`http://localhost:5000/uploads/${filename}`} />
+      <img src={`${SERVER_URL}/uploads/${filename}`} />
     </div>
   );
 };

@@ -7,6 +7,10 @@ import AdminRoute from "./Routes/AdminRoute";
 import UserPanel from "./pages/UserPanel";
 import Layout from "./pages/Layout";
 import Dashboard from "./pages/Dashboard";
+import Location from "./pages/Location";
+import Clue from "./pages/Clue";
+import Photo from "./pages/Photo";
+import Team from "./pages/Team";
 
 function App() {
   return (
@@ -18,6 +22,10 @@ function App() {
         <Route path="admin/login" element={<AdminLogin />} />
         <Route path="admin/" element={<Layout />}>
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="location" element={<Location />} />
+          <Route path="clue" element={<Clue />} />
+          <Route path="photo" element={<Photo />} />
+          <Route path="team" element={<Team />} />
         </Route>
       </Routes>
     </BrowserRouter>
