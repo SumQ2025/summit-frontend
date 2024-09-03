@@ -37,12 +37,12 @@ const UserPanel = () => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center bg-[#124a7d]">
+    <div className="flex flex-col items-center bg-[#124a7d]">
       <div className="bg-[#1f262d] h-[50px] w-full fixed top-0 flex justify-between items-center text-white px-[15px] uppercase">
         <span>{locationName}</span>
         <LogoutIcon onClick={logout} />
       </div>
-      <div className="bg-[#124a7d] w-full min-h-screen h-full p-[25px] gap-[15px] flex flex-col mt-[50px]">
+      <div className="bg-[#124a7d] w-full min-h-screen h-full p-[25px] gap-[15px] flex flex-col mt-[50px] items-center">
         {clues.map((clue, index) => {
           return (
             <ClueCard
