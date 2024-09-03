@@ -42,7 +42,7 @@ const clueStyle = {
   bgcolor: "background.paper",
 };
 
-const Layout = () => {
+const AdminLayout = () => {
   const [teamModal, setTeamModal] = useState(false);
   const [clueModal, setClueModal] = useState(false);
   const [locationModal, setLocationModal] = useState(false);
@@ -450,4 +450,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default AdminLayout;
