@@ -174,11 +174,15 @@ const Clue = () => {
                   {clue.description}
                 </TableCell>
                 <TableCell align="center" sx={{ width: "100px" }}>
-                  <img
-                    src={`${SERVER_URL}/uploads/${clue.path}`}
-                    alt="clue_img"
-                    className="w-[70px]"
-                  />
+                  {clue.path === "" ? (
+                    <></>
+                  ) : (
+                    <img
+                      src={`${SERVER_URL}/uploads/${clue.path}`}
+                      alt="clue_img"
+                      className="w-[70px]"
+                    />
+                  )}
                 </TableCell>
                 <TableCell align="center">
                   <Button

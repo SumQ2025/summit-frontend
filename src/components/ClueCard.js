@@ -39,7 +39,7 @@ const ClueCard = () => {
   };
 
   return (
-    <div className="w-full p-[24px] flex flex-col text-center rounded-[10px] bg-white">
+    <div className="w-full max-w-[400px] p-[24px] flex flex-col text-center rounded-[10px] bg-white">
       <span className="text-[#0b4c7a] text-[32px] leading-[40px] font-[700] uppercase font-sans">
         Welcome to the Blue Mountain Quest
       </span>
