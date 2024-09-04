@@ -43,6 +43,15 @@ const Photo = () => {
     setTeamId(event.target.value);
   };
 
+  const downloadPhoto = async () => {
+    const params = {
+      locationId,
+      teamId,
+    };
+    const response = await axios.get(`${SERVER_URL}/downloadPhoto`, { params });
+    console.log(response);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -127,7 +136,12 @@ const Photo = () => {
               })}
           </Select>
         </FormControl>
-        <Button variant="outlined" startIcon={<DownloadIcon />} size="small">
+        <Button
+          variant="outlined"
+          startIcon={<DownloadIcon />}
+          size="small"
+          onClick={downloadPhoto}
+        >
           Download
         </Button>
       </div>
