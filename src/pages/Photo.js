@@ -64,16 +64,19 @@ const Photo = () => {
       if (teamRes.data.message === "success") {
         setTeams(teamRes.data.teams);
       }
-      setTeamId(teamRes.data.teams[0]._id);
-      setLocationId(locationRes.data.locations[0]._id);
-      const param = {
-        teamId: teamRes.data.teams[0]._id,
-        locationId: locationRes.data.locations[0]._id,
-      };
-      const response = await axios.post(`${SERVER_URL}/getPhotosById`, param);
-      if (response.data.message === "success") {
-        setIsLoading(false);
-        setPhotos(response.data.photos);
+
+      if (teamRes.data.teams && locationRes.data.locations) {
+        setTeamId(teamRes.data.teams[0]._id);
+        setLocationId(locationRes.data.locations[0]._id);
+        const param = {
+          teamId: teamRes.data.teams[0]._id,
+          locationId: locationRes.data.locations[0]._id,
+        };
+        const response = await axios.post(`${SERVER_URL}/getPhotosById`, param);
+        if (response.data.message === "success") {
+          setIsLoading(false);
+          setPhotos(response.data.photos);
+        }
       }
     };
 
