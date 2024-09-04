@@ -144,7 +144,9 @@ const AdminLayout = () => {
     const fetchData = async () => {
       const response = await axios.get(`${SERVER_URL}/getLocations`);
       setLocations(response.data.locations);
-      setLocationId(response.data.locations[0]._id);
+      if (response.data.locations.length !== 0) {
+        setLocationId(response.data.locations[0]._id);
+      }
     };
 
     setCurrentPath(url.pathname);

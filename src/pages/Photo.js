@@ -65,7 +65,10 @@ const Photo = () => {
         setTeams(teamRes.data.teams);
       }
 
-      if (teamRes.data.teams && locationRes.data.locations) {
+      if (
+        teamRes.data.teams.length !== 0 &&
+        locationRes.data.locations.length !== 0
+      ) {
         setTeamId(teamRes.data.teams[0]._id);
         setLocationId(locationRes.data.locations[0]._id);
         const param = {
@@ -77,6 +80,8 @@ const Photo = () => {
           setIsLoading(false);
           setPhotos(response.data.photos);
         }
+      } else {
+        setIsLoading(false);
       }
     };
 
