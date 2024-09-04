@@ -26,7 +26,7 @@ function App() {
           <Route path="location" element={<UserLocation />} />
         </Route>
 
-        <Route path="admin/login" element={<AdminLogin />} />
+        <Route path="admin-login" element={<AdminLogin />} />
 
         <Route path="admin/" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />

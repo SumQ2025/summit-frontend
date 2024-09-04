@@ -20,6 +20,7 @@ import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -104,9 +105,10 @@ TablePaginationActions.propTypes = {
 
 const Team = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [teams, setTeams] = useState([]);
   const navigate = useNavigate();
+  const { setIsLoading } = useOutletContext();
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - teams.length) : 0;
@@ -124,8 +126,10 @@ const Team = () => {
     const param = {
       id: teamId,
     };
+    setIsLoading(true);
     const response = await axios.post(`${SERVER_URL}/deleteTeam`, param);
     if (response.data.message === "success") {
+      setIsLoading(false);
       setTeams(response.data.users);
     }
   };
@@ -137,8 +141,10 @@ const Team = () => {
 
   useEffect(() => {
     const fetchTeams = async () => {
+      setIsLoading(true);
       const response = await axios.get(`${SERVER_URL}/getTeams`);
       if (response.data.message === "success") {
+        setIsLoading(false);
         setTeams(response.data.teams);
       }
     };

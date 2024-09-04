@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 import axios from "axios";
 
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -18,21 +17,24 @@ const UserPanel = () => {
   const [clues, setClues] = useState([]);
   const [locationName, setLocationName] = useState("");
 
+  const { setIsLoading } = useOutletContext();
+
   const logout = () => {
     logoutUser();
   };
 
-  const init = async () => {
-    const userId = window.localStorage.getItem("userToken");
-    const param = { userId, locationId };
-    const response = await axios.post(`${SERVER_URL}/getCluesById`, param);
-    if (response.data.message === "success") {
-      setClues(response.data.clues);
-      setLocationName(response.data.locationName.name);
-    }
-  };
-
   useEffect(() => {
+    const init = async () => {
+      const userId = window.localStorage.getItem("userToken");
+      const param = { userId, locationId };
+      setIsLoading(true);
+      const response = await axios.post(`${SERVER_URL}/getCluesById`, param);
+      if (response.data.message === "success") {
+        setIsLoading(false);
+        setClues(response.data.clues);
+        setLocationName(response.data.locationName.name);
+      }
+    };
     init();
   }, []);
 

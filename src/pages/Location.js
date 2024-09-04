@@ -19,6 +19,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
+import { useOutletContext } from "react-router-dom";
 
 const TablePaginationActions = (props) => {
   const theme = useTheme();
@@ -101,8 +102,9 @@ TablePaginationActions.propTypes = {
 
 const Location = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [locations, setLocations] = useState([]);
+  const { setIsLoading } = useOutletContext();
 
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -123,15 +125,19 @@ const Location = () => {
     const param = {
       id: id,
     };
+    setIsLoading(true);
     const response = await axios.post(`${SERVER_URL}/deleteLocation`, param);
     if (response.data.message === "success") {
+      setIsLoading(false);
       setLocations(response.data.locations);
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const response = await axios.get(`${SERVER_URL}/getLocations`);
+      setIsLoading(false);
       setLocations(response.data.locations);
     };
 

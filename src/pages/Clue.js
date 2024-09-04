@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
@@ -103,8 +104,9 @@ TablePaginationActions.propTypes = {
 
 const Clue = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [clues, setClues] = useState([]);
+  const { setIsLoading } = useOutletContext();
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - clues.length) : 0;
@@ -122,16 +124,20 @@ const Clue = () => {
     const param = {
       id: clueId,
     };
+    setIsLoading(true);
     const response = await axios.post(`${SERVER_URL}/deleteClue`, param);
     if (response.data.message === "success") {
+      setIsLoading(false);
       setClues(response.data.clues);
     }
   };
 
   useEffect(() => {
     const fetchClues = async () => {
+      setIsLoading(true);
       const response = await axios.get(`${SERVER_URL}/getClues`);
       if (response.data.message === "success") {
+        setIsLoading(false);
         setClues(response.data.clues);
       }
     };
