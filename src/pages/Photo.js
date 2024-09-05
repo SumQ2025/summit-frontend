@@ -48,8 +48,20 @@ const Photo = () => {
       locationId,
       teamId,
     };
-    const response = await axios.get(`${SERVER_URL}/downloadPhoto`, { params });
-    console.log(response);
+    const response = await axios.get(`${SERVER_URL}/downloadPhoto`, {
+      params,
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "summit.zip");
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+
+    window.URL.revokeObjectURL(url);
   };
 
   useEffect(() => {

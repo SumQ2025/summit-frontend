@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -20,8 +20,25 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Modal from "@mui/material/Modal";
+
+import defaultImg from "../assets/img/sketch.jpg";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
+const clueStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+};
 
 const TablePaginationActions = (props) => {
   const theme = useTheme();
@@ -106,7 +123,20 @@ const Clue = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [clues, setClues] = useState([]);
+  const [editModal, setEditModal] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const [editValue, setEditValue] = useState(0);
+  const [editDescription, setEditDescription] = useState("");
+  const [editLocationId, setEditLocationId] = useState("");
+  const [editPath, setEditPath] = useState("");
+  const [editId, setEditId] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [file, setFile] = useState(null);
+
   const { setIsLoading } = useOutletContext();
+
+  const editClueFileRef = useRef(null);
+  const defaultImgRef = useRef(null);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - clues.length) : 0;
@@ -120,6 +150,22 @@ const Clue = () => {
     setPage(0);
   };
 
+  const handleEditClueImg = (e) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+    let file = e.target.files[0];
+
+    if (file) {
+      let reader = new FileReader();
+
+      reader.onload = function (e) {
+        defaultImgRef.current.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const deleteClue = async (clueId) => {
     const param = {
       id: clueId,
@@ -129,6 +175,39 @@ const Clue = () => {
     if (response.data.message === "success") {
       setIsLoading(false);
       setClues(response.data.clues);
+    }
+  };
+
+  const editClue = async (clueId) => {
+    setEditId(clueId);
+    const param = {
+      clueId,
+    };
+    const response = await axios.post(`${SERVER_URL}/getClueById`, param);
+    if (response.data.message === "success") {
+      const clue = response.data.clue;
+      setEditTitle(clue.title);
+      setEditValue(clue.point);
+      setEditDescription(clue.description);
+      setEditPath(clue.path);
+      setEditLocationId(clue.locationId);
+      setLocations(response.data.locations);
+      setEditModal(true);
+    }
+  };
+
+  const handleEditClue = async () => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("title", editTitle);
+    formData.append("value", editValue);
+    formData.append("description", editDescription);
+    formData.append("locationId", editLocationId);
+    formData.append("editId", editId);
+
+    const response = await axios.post(`${SERVER_URL}/editClue`, formData);
+    if (response.data.message === "success") {
+      window.location.reload();
     }
   };
 
@@ -193,6 +272,17 @@ const Clue = () => {
                 <TableCell align="center">
                   <Button
                     variant="outlined"
+                    color="primary"
+                    size="small"
+                    sx={{ marginRight: "5px" }}
+                    onClick={() => {
+                      editClue(clue._id);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outlined"
                     color="error"
                     size="small"
                     onClick={() => {
@@ -234,6 +324,106 @@ const Clue = () => {
           </TableFooter>
         </Table>
       </TableContainer>
+
+      <Modal
+        keepMounted
+        open={editModal}
+        onClose={() => {
+          setEditModal(false);
+        }}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
+      >
+        <Box sx={clueStyle}>
+          <div className="bg-[#1d488b] text-white p-3 text-[20px]">
+            <span>Edit the detail of clue</span>
+          </div>
+          <div className="pt-[20px] p-[30px] flex flex-col gap-[15px]">
+            <TextField
+              label="Title"
+              variant="standard"
+              className="w-full"
+              value={editTitle}
+              onChange={(e) => {
+                setEditTitle(e.target.value);
+              }}
+            />
+            <TextField
+              label="Value"
+              variant="standard"
+              value={editValue}
+              className="w-full"
+              onChange={(e) => {
+                setEditValue(e.target.value);
+              }}
+            />
+            <TextField
+              label="Description"
+              multiline
+              maxRows={4}
+              value={editDescription}
+              variant="standard"
+              onChange={(e) => {
+                setEditDescription(e.target.value);
+              }}
+            />
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                select location name
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                value={editLocationId}
+                label="select location name"
+                onChange={(e) => {
+                  setEditLocationId(e.target.value);
+                }}
+              >
+                {locations.length > 0 &&
+                  locations.map((location, key) => {
+                    return (
+                      <MenuItem value={location._id} key={key}>
+                        {location.name}
+                      </MenuItem>
+                    );
+                  })}
+              </Select>
+            </FormControl>
+            <InputLabel id="demo-simple-select-label">
+              Click image to change photo
+            </InputLabel>
+            <div className="flex justify-center border-[1px] p-2">
+              <img
+                src={
+                  editPath ? `${SERVER_URL}/uploads/${editPath}` : defaultImg
+                }
+                alt="defaultImg"
+                ref={defaultImgRef}
+                className="w-[200px]"
+                onClick={() => {
+                  editClueFileRef.current.click();
+                }}
+              />
+              <input
+                type="file"
+                className="hidden"
+                ref={editClueFileRef}
+                onChange={handleEditClueImg}
+              />
+            </div>
+            <div className="mt-1">
+              <Button
+                variant="contained"
+                className="w-full"
+                sx={{ backgroundColor: "#1d488b" }}
+                onClick={handleEditClue}
+              >
+                Edit
+              </Button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };
