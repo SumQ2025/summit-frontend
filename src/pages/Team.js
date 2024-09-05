@@ -173,7 +173,7 @@ const Team = () => {
     };
     fetchTeamsByKey();
   }, [searchKey]);
-
+  
   return (
     <div className="w-[1000px] mt-[-10px]">
       <SearchBox setSearchKey={setSearchKey} />

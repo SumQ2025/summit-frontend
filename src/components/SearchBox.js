@@ -3,7 +3,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 const SearchBox = ({ setSearchKey }) => {
   return (
-    <div className="flex justify-center mb-[8px]">
+    <form autoComplete="off" className="flex justify-center mb-[8px]">
       <div className="flex items-center text-black px-2 py-1 gap-1">
         <SearchIcon fontSize="large" />
         <input
@@ -11,10 +11,9 @@ const SearchBox = ({ setSearchKey }) => {
           onChange={(e) => {
             setSearchKey(e.target.value);
           }}
-          autoComplete="off"
         />
       </div>
-    </div>
+    </form>
   );
 };
 
