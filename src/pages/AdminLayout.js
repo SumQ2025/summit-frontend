@@ -485,6 +485,7 @@ const AdminLayout = () => {
             top: "50%",
             right: "45%",
             translate: "-50%, -50%",
+            zIndex: 10000,
           }}
           className={isLoading === true ? "" : "hidden"}
         >
