@@ -29,6 +29,8 @@ import Modal from "@mui/material/Modal";
 
 import defaultImg from "../assets/img/sketch.jpg";
 
+import SearchBox from "../components/SearchBox";
+
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const clueStyle = {
@@ -132,6 +134,7 @@ const Clue = () => {
   const [editId, setEditId] = useState("");
   const [locations, setLocations] = useState([]);
   const [file, setFile] = useState(null);
+  const [searchKey, setSearchKey] = useState("");
 
   const { setIsLoading } = useOutletContext();
 
@@ -223,8 +226,23 @@ const Clue = () => {
     fetchClues();
   }, []);
 
+  useEffect(() => {
+    const fetchCluesByKey = async () => {
+      // setIsLoading(true);
+      // const response = await axios.get(`${SERVER_URL}/getClues`);
+      // if (response.data.message === "success") {
+      //   setIsLoading(false);
+      //   setClues(response.data.clues);
+      // }
+      if (searchKey === "") return;
+      console.log(searchKey);
+    };
+    fetchCluesByKey();
+  }, [searchKey]);
+
   return (
-    <div className="w-[95%]">
+    <div className="w-[95%] mt-[-10px]">
+      <SearchBox setSearchKey={setSearchKey} />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>

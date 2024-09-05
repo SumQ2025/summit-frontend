@@ -255,7 +255,7 @@ const AdminLayout = () => {
               </button>
             </div>
           </div>
-          <div className="flex justify-center bg-[#eeeeee] h-full p-5">
+          <div className="flex justify-center bg-[#eeeeee] h-full p-5 pt-5">
             <Outlet context={{ setIsLoading }} />
           </div>
         </div>

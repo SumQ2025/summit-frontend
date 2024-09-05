@@ -21,6 +21,8 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
 import { useOutletContext } from "react-router-dom";
 
+import SearchBox from "../components/SearchBox";
+
 const TablePaginationActions = (props) => {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -105,6 +107,7 @@ const Location = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [locations, setLocations] = useState([]);
   const { setIsLoading } = useOutletContext();
+  const [searchKey, setSearchKey] = useState("");
 
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -133,19 +136,39 @@ const Location = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const response = await axios.get(`${SERVER_URL}/getLocations`);
-      setIsLoading(false);
-      setLocations(response.data.locations);
-    };
+  const fetchData = async () => {
+    setIsLoading(true);
+    const response = await axios.get(`${SERVER_URL}/getLocations`);
+    setIsLoading(false);
+    setLocations(response.data.locations);
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchLocationsByKey = async () => {
+      if (searchKey === "") fetchData();
+      const param = {
+        searchKey,
+      };
+      setIsLoading(true);
+      const response = await axios.post(
+        `${SERVER_URL}/getLocationsByKey`,
+        param
+      );
+      setIsLoading(false);
+      if (response.data.message === "success") {
+        setLocations(response.data.locations);
+      }
+    };
+    fetchLocationsByKey();
+  }, [searchKey]);
+
   return (
-    <div className="w-[500px]">
+    <div className="w-[500px] mt-[-10px]">
+      <SearchBox setSearchKey={setSearchKey} />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>
