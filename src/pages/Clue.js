@@ -223,8 +223,10 @@ const Clue = () => {
     formData.append("editId", editId);
     formData.append("imgState", imgState);
 
+    setIsLoading(true);
     const response = await axios.post(`${SERVER_URL}/editClue`, formData);
     if (response.data.message === "success") {
+      setIsLoading(false);
       window.location.reload();
     }
   };
