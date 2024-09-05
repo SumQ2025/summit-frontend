@@ -22,6 +22,8 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
 
+import SearchBox from "../components/SearchBox";
+
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const TablePaginationActions = (props) => {
@@ -109,6 +111,7 @@ const Team = () => {
   const [teams, setTeams] = useState([]);
   const navigate = useNavigate();
   const { setIsLoading } = useOutletContext();
+  const [searchKey, setSearchKey] = useState("");
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - teams.length) : 0;
@@ -139,20 +142,41 @@ const Team = () => {
     navigate("/admin/team-detail", { state: param });
   };
 
+  const fetchTeams = async () => {
+    setIsLoading(true);
+    const response = await axios.get(`${SERVER_URL}/getTeams`);
+    if (response.data.message === "success") {
+      setIsLoading(false);
+      setTeams(response.data.teams);
+    }
+  };
+
   useEffect(() => {
-    const fetchTeams = async () => {
+    fetchTeams();
+  }, []);
+
+  useEffect(() => {
+    const fetchTeamsByKey = async () => {
+      if (searchKey === "") {
+        fetchTeams();
+        return;
+      }
       setIsLoading(true);
-      const response = await axios.get(`${SERVER_URL}/getTeams`);
+      const param = {
+        searchKey,
+      };
+      const response = await axios.post(`${SERVER_URL}/getTeamsByKey`, param);
       if (response.data.message === "success") {
         setIsLoading(false);
         setTeams(response.data.teams);
       }
     };
-    fetchTeams();
-  }, []);
+    fetchTeamsByKey();
+  }, [searchKey]);
 
   return (
-    <div className="w-[1000px]">
+    <div className="w-[1000px] mt-[-10px]">
+      <SearchBox setSearchKey={setSearchKey} />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>
