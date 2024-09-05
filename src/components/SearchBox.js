@@ -11,6 +11,7 @@ const SearchBox = ({ setSearchKey }) => {
           onChange={(e) => {
             setSearchKey(e.target.value);
           }}
+          autoComplete="off"
         />
       </div>
     </div>
