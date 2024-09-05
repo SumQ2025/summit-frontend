@@ -266,45 +266,50 @@ const AdminLayout = () => {
               <span>Fill the detail of new team</span>
             </div>
             <div className="pt-[20px] p-[30px] flex flex-col gap-[15px]">
-              <TextField
-                label="Company Name"
-                variant="standard"
-                className="w-full"
-                onChange={(e) => {
-                  setCompanyName(e.target.value);
-                }}
-                required={true}
-              />
-              <TextField
-                label="Team Number"
-                variant="standard"
-                className="w-full"
-                onChange={(e) => {
-                  setTeamNumber(e.target.value);
-                }}
-                required={true}
-              />
-              <TextField
-                label="Password"
-                type="password"
-                autoComplete="current-password"
-                variant="standard"
-                className="w-full"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                required={true}
-              />
-              <TextField
-                label="Password Confirm"
-                type="password"
-                autoComplete="current-password"
-                variant="standard"
-                className="w-full"
-                onChange={(e) => {
-                  setRePassword(e.target.value);
-                }}
-              />
+              <form autoComplete="off">
+                <TextField
+                  label="Company Name"
+                  variant="standard"
+                  className="w-full"
+                  onChange={(e) => {
+                    setCompanyName(e.target.value);
+                  }}
+                />
+              </form>
+              <form autoComplete="off">
+                <TextField
+                  label="Team Number"
+                  variant="standard"
+                  className="w-full"
+                  onChange={(e) => {
+                    setTeamNumber(e.target.value);
+                  }}
+                />
+              </form>
+
+              <form autoComplete="off">
+                <TextField
+                  label="Password"
+                  type="password"
+                  variant="standard"
+                  className="w-full"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                />
+              </form>
+              <form autoComplete="off">
+                <TextField
+                  label="Password Confirm"
+                  type="password"
+                  autoComplete="off"
+                  variant="standard"
+                  className="w-full"
+                  onChange={(e) => {
+                    setRePassword(e.target.value);
+                  }}
+                />
+              </form>
               <div className="mt-1">
                 <Button
                   variant="contained"
@@ -421,31 +426,33 @@ const AdminLayout = () => {
           aria-labelledby="keep-mounted-modal-title"
           aria-describedby="keep-mounted-modal-description"
         >
-          <Box sx={style}>
-            <div className="bg-[#1d488b] text-white p-3 text-[20px]">
-              <span>Fill the detail of new location</span>
-            </div>
-            <div className="pt-[20px] p-[30px] flex flex-col gap-[15px]">
-              <TextField
-                label="Location name"
-                variant="standard"
-                className="w-full"
-                onChange={(e) => {
-                  setLocationname(e.target.value);
-                }}
-              />
-              <div className="mt-1">
-                <Button
-                  variant="contained"
-                  className="w-full"
-                  sx={{ backgroundColor: "#1d488b" }}
-                  onClick={addLocation}
-                >
-                  Add
-                </Button>
+          <form autoComplete="off">
+            <Box sx={style}>
+              <div className="bg-[#1d488b] text-white p-3 text-[20px]">
+                <span>Fill the detail of new location</span>
               </div>
-            </div>
-          </Box>
+              <div className="pt-[20px] p-[30px] flex flex-col gap-[15px]">
+                <TextField
+                  label="Location name"
+                  variant="standard"
+                  className="w-full"
+                  onChange={(e) => {
+                    setLocationname(e.target.value);
+                  }}
+                />
+                <div className="mt-1">
+                  <Button
+                    variant="contained"
+                    className="w-full"
+                    sx={{ backgroundColor: "#1d488b" }}
+                    onClick={addLocation}
+                  >
+                    Add
+                  </Button>
+                </div>
+              </div>
+            </Box>
+          </form>
         </Modal>
 
         <Box
