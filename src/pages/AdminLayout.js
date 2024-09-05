@@ -160,7 +160,7 @@ const AdminLayout = () => {
   if (adminToken) {
     return (
       <div className="flex">
-        <div className="min-h-screen h-full bg-[#1f262d] pt-[20px] text-white w-[240px] text-[19px]">
+        <div className="min-h-screen bg-[#1f262d] pt-[20px] text-white w-[240px] text-[19px]">
           <div className="flex justify-center mr-8 mb-2">
             <img src={logo} alt="logo" className="w-[150px]" />
           </div>
@@ -247,7 +247,7 @@ const AdminLayout = () => {
               </button>
             </div>
           </div>
-          <div className="flex justify-center bg-[#eeeeee] h-full p-5 pt-5">
+          <div className="flex justify-center bg-[#eeeeee] p-5 pt-5 grow">
             <Outlet context={{ setIsLoading }} />
           </div>
         </div>

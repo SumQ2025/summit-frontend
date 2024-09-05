@@ -442,7 +442,7 @@ const Clue = () => {
                 sx={{ backgroundColor: "#1d488b" }}
                 onClick={handleEditClue}
               >
-                Edit
+                SAVE
               </Button>
             </div>
           </div>
