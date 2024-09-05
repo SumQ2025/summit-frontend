@@ -214,28 +214,34 @@ const Clue = () => {
     }
   };
 
+  const fetchClues = async () => {
+    setIsLoading(true);
+    const response = await axios.get(`${SERVER_URL}/getClues`);
+    if (response.data.message === "success") {
+      setIsLoading(false);
+      setClues(response.data.clues);
+    }
+  };
+
   useEffect(() => {
-    const fetchClues = async () => {
-      setIsLoading(true);
-      const response = await axios.get(`${SERVER_URL}/getClues`);
-      if (response.data.message === "success") {
-        setIsLoading(false);
-        setClues(response.data.clues);
-      }
-    };
     fetchClues();
   }, []);
 
   useEffect(() => {
     const fetchCluesByKey = async () => {
-      // setIsLoading(true);
-      // const response = await axios.get(`${SERVER_URL}/getClues`);
-      // if (response.data.message === "success") {
-      //   setIsLoading(false);
-      //   setClues(response.data.clues);
-      // }
-      if (searchKey === "") return;
-      console.log(searchKey);
+      if (searchKey === "") {
+        fetchClues();
+        return;
+      }
+      setIsLoading(true);
+      const param = {
+        searchKey,
+      };
+      const response = await axios.post(`${SERVER_URL}/getCluesByKey`, param);
+      if (response.data.message === "success") {
+        setIsLoading(false);
+        setClues(response.data.clues);
+      }
     };
     fetchCluesByKey();
   }, [searchKey]);
