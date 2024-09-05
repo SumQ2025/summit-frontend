@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import axios from "axios";
-import PropTypes from "prop-types";
-import { useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
@@ -11,11 +9,6 @@ import TableFooter from "@mui/material/TableFooter";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
@@ -100,6 +93,8 @@ const TeamDetail = () => {
   const [locations, setLocations] = useState([]);
   const { teamId } = location.state;
 
+  const { setIsLoading } = useOutletContext();
+
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - locations.length) : 0;
 
@@ -127,8 +122,10 @@ const TeamDetail = () => {
       locations,
       teamId,
     };
+    setIsLoading(true);
     const response = await axios.post(`${SERVER_URL}/saveTeamDetail`, param);
     if (response.data.message === "success") {
+      setIsLoading(false);
       window.location.href = "/admin/team";
     }
   };
@@ -138,10 +135,12 @@ const TeamDetail = () => {
       const param = {
         teamId,
       };
+      setIsLoading(true);
       const response = await axios.post(
         `${SERVER_URL}/getLocationsById`,
         param
       );
+      setIsLoading(false);
       setLocations(response.data.locations);
     };
 
