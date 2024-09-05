@@ -58,6 +58,7 @@ const AdminLayout = () => {
   const [description, setDescription] = useState("");
   const [locations, setLocations] = useState([]);
   const [locationId, setLocationId] = useState("");
+  const [cloneLocationId, setCloneLocationId] = useState("none");
   const [file, setFile] = useState(null);
   const [currentPath, setCurrentPath] = useState("");
   const [isLoading, setIsLoading] = useState("false");
@@ -109,6 +110,7 @@ const AdminLayout = () => {
   const addLocation = async () => {
     const param = {
       locationName: locationname,
+      locationId: cloneLocationId,
     };
     try {
       const response = await axios.post(`${SERVER_URL}/addLocation`, param);
@@ -216,35 +218,32 @@ const AdminLayout = () => {
         </div>
         <div className="grow text-white flex flex-col">
           <div className="bg-[#141619] p-[15px] flex justify-center gap-10">
-            <div className="flex gap-1 items-center opacity-70 hover:opacity-100 transition-all duration-200">
-              <PersonAddAlt1Icon />
-              <button
-                onClick={() => {
-                  setTeamModal(true);
-                }}
-              >
-                Add Team
-              </button>
+            <div
+              className="flex gap-1 items-center opacity-70 hover:opacity-100 transition-all duration-200"
+              onClick={() => {
+                setTeamModal(true);
+              }}
+            >
+              <PersonAddAlt1Icon className="hover:cursor-pointer" />
+              <button>Add Team</button>
             </div>
-            <div className="flex gap-1 items-center opacity-70 hover:opacity-100 transition-all duration-200">
-              <PlaylistAddIcon />
-              <button
-                onClick={() => {
-                  setClueModal(true);
-                }}
-              >
-                Add Clue
-              </button>
+            <div
+              className="flex gap-1 items-center opacity-70 hover:opacity-100 transition-all duration-200"
+              onClick={() => {
+                setClueModal(true);
+              }}
+            >
+              <PlaylistAddIcon className="hover:cursor-pointer" />
+              <button>Add Clue</button>
             </div>
-            <div className="flex gap-1 items-center opacity-70 hover:opacity-100 transition-all duration-200">
-              <AddPhotoAlternateIcon />
-              <button
-                onClick={() => {
-                  setLocationModal(true);
-                }}
-              >
-                Add Location
-              </button>
+            <div
+              className="flex gap-1 items-center opacity-70 hover:opacity-100 transition-all duration-200"
+              onClick={() => {
+                setLocationModal(true);
+              }}
+            >
+              <AddPhotoAlternateIcon className="hover:cursor-pointer" />
+              <button>Add Location</button>
             </div>
           </div>
           <div className="flex justify-center bg-[#eeeeee] p-5 pt-5 grow">
@@ -431,7 +430,7 @@ const AdminLayout = () => {
               <div className="bg-[#1d488b] text-white p-3 text-[20px]">
                 <span>Fill the detail of new location</span>
               </div>
-              <div className="pt-[20px] p-[30px] flex flex-col gap-[15px]">
+              <div className="pt-[20px] p-[30px] flex flex-col gap-[25px]">
                 <TextField
                   label="Location name"
                   variant="standard"
@@ -440,6 +439,31 @@ const AdminLayout = () => {
                     setLocationname(e.target.value);
                   }}
                 />
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    select location name to clone clues
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    value={cloneLocationId}
+                    label="select location name to clone clues"
+                    onChange={(e) => {
+                      setCloneLocationId(e.target.value);
+                    }}
+                  >
+                    <MenuItem default value="none" key="empty">
+                      none
+                    </MenuItem>
+                    {locations.length > 0 &&
+                      locations.map((location, key) => {
+                        return (
+                          <MenuItem value={location._id} key={key}>
+                            {location.name}
+                          </MenuItem>
+                        );
+                      })}
+                  </Select>
+                </FormControl>
                 <div className="mt-1">
                   <Button
                     variant="contained"

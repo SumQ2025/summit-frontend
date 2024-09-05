@@ -26,6 +26,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Modal from "@mui/material/Modal";
+import CloseIcon from "@mui/icons-material/Close";
 
 import defaultImg from "../assets/img/sketch.jpg";
 
@@ -135,6 +136,7 @@ const Clue = () => {
   const [locations, setLocations] = useState([]);
   const [file, setFile] = useState(null);
   const [searchKey, setSearchKey] = useState("");
+  const [imgState, setImgState] = useState(true);
 
   const { setIsLoading } = useOutletContext();
 
@@ -169,6 +171,16 @@ const Clue = () => {
     }
   };
 
+  const closeModal = () => {
+    setEditModal(false);
+    setImgState(true);
+  };
+
+  const handleCloseClick = () => {
+    setImgState(false);
+    setFile(null);
+  };
+
   const deleteClue = async (clueId) => {
     const param = {
       id: clueId,
@@ -186,8 +198,10 @@ const Clue = () => {
     const param = {
       clueId,
     };
+    setIsLoading(true);
     const response = await axios.post(`${SERVER_URL}/getClueById`, param);
     if (response.data.message === "success") {
+      setIsLoading(false);
       const clue = response.data.clue;
       setEditTitle(clue.title);
       setEditValue(clue.point);
@@ -207,6 +221,7 @@ const Clue = () => {
     formData.append("description", editDescription);
     formData.append("locationId", editLocationId);
     formData.append("editId", editId);
+    formData.append("imgState", imgState);
 
     const response = await axios.post(`${SERVER_URL}/editClue`, formData);
     if (response.data.message === "success") {
@@ -352,9 +367,7 @@ const Clue = () => {
       <Modal
         keepMounted
         open={editModal}
-        onClose={() => {
-          setEditModal(false);
-        }}
+        onClose={closeModal}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
@@ -416,10 +429,16 @@ const Clue = () => {
             <InputLabel id="demo-simple-select-label">
               Click image to change photo
             </InputLabel>
-            <div className="flex justify-center border-[1px] p-2">
+            <div className="flex justify-center border-[1px] p-2 relative">
+              <CloseIcon
+                className="absolute top-0 right-0 hover:cursor-pointer"
+                onClick={handleCloseClick}
+              />
               <img
                 src={
-                  editPath ? `${SERVER_URL}/uploads/${editPath}` : defaultImg
+                  editPath && imgState === true
+                    ? `${SERVER_URL}/uploads/${editPath}`
+                    : defaultImg
                 }
                 alt="defaultImg"
                 ref={defaultImgRef}
