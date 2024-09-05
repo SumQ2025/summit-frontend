@@ -204,14 +204,6 @@ const AdminLayout = () => {
               Locations
             </div>
           </Link>
-          {/* <Link to="/">
-            <div
-              className={`flex gap-3 items-center pl-[20px] p-[15px] hover:bg-[#27a9e3] hover:text-white transition-all duration-200 text-[#a0a3a6]`}
-            >
-              <DownloadIcon />
-              Download Photos
-            </div>
-          </Link> */}
           <Link to="/">
             <div
               className={`flex gap-3 items-center pl-[20px] p-[15px] hover:bg-[#27a9e3] hover:text-white transition-all duration-200 text-[#a0a3a6]`}

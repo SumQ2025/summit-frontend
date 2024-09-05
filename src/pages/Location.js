@@ -20,8 +20,19 @@ import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
 import { useOutletContext } from "react-router-dom";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
 
 import SearchBox from "../components/SearchBox";
+
+const style = {
+  position: "absolute",
+  top: "40%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+};
 
 const TablePaginationActions = (props) => {
   const theme = useTheme();
@@ -108,6 +119,9 @@ const Location = () => {
   const [locations, setLocations] = useState([]);
   const { setIsLoading } = useOutletContext();
   const [searchKey, setSearchKey] = useState("");
+  const [editModal, setEditModal] = useState(false);
+  const [editLocationname, setEditLocationname] = useState("");
+  const [locationId, setLocationId] = useState("");
 
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -133,6 +147,23 @@ const Location = () => {
     if (response.data.message === "success") {
       setIsLoading(false);
       setLocations(response.data.locations);
+    }
+  };
+
+  const editLocation = async (locationId, locationName) => {
+    setLocationId(locationId);
+    setEditLocationname(locationName);
+    setEditModal(true);
+  };
+
+  const handleEditLocation = async () => {
+    const param = {
+      locationId: locationId,
+      locationName: editLocationname,
+    };
+    const response = await axios.post(`${SERVER_URL}/editLocation`, param);
+    if (response.data.message === "success") {
+      window.location.reload();
     }
   };
 
@@ -196,6 +227,17 @@ const Location = () => {
                 <TableCell align="center" sx={{ width: "120px" }}>
                   <Button
                     variant="outlined"
+                    color="primary"
+                    size="small"
+                    sx={{ marginRight: "5px" }}
+                    onClick={() => {
+                      editLocation(location._id, location.name);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outlined"
                     color="error"
                     size="small"
                     onClick={() => {
@@ -238,6 +280,42 @@ const Location = () => {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Modal
+        keepMounted
+        open={editModal}
+        onClose={() => {
+          setEditModal(false);
+        }}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
+      >
+        <Box sx={style}>
+          <div className="bg-[#1d488b] text-white p-3 text-[20px]">
+            <span>Edit the name of location</span>
+          </div>
+          <div className="pt-[20px] p-[30px] flex flex-col gap-[15px]">
+            <TextField
+              label="Location name"
+              variant="standard"
+              className="w-full"
+              value={editLocationname}
+              onChange={(e) => {
+                setEditLocationname(e.target.value);
+              }}
+            />
+            <div className="mt-1">
+              <Button
+                variant="contained"
+                className="w-full"
+                sx={{ backgroundColor: "#1d488b" }}
+                onClick={handleEditLocation}
+              >
+                Edit
+              </Button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };

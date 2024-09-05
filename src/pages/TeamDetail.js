@@ -13,6 +13,7 @@ import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
 import Switch from "@mui/material/Switch";
+import TextField from "@mui/material/TextField";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -91,6 +92,8 @@ const TeamDetail = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [locations, setLocations] = useState([]);
+  const [companyName, setCompanyName] = useState("");
+  const [teamNumber, setTeamNumber] = useState("");
   const { teamId } = location.state;
 
   const { setIsLoading } = useOutletContext();
@@ -121,6 +124,8 @@ const TeamDetail = () => {
     const param = {
       locations,
       teamId,
+      teamNumber,
+      companyName,
     };
     setIsLoading(true);
     const response = await axios.post(`${SERVER_URL}/saveTeamDetail`, param);
@@ -142,6 +147,8 @@ const TeamDetail = () => {
       );
       setIsLoading(false);
       setLocations(response.data.locations);
+      setCompanyName(response.data.team.companyName);
+      setTeamNumber(response.data.team.teamNumber);
     };
 
     fetchData();
@@ -149,6 +156,26 @@ const TeamDetail = () => {
 
   return (
     <div className="w-[500px]">
+      <div className="flex gap-5 mb-3 px-5">
+        <TextField
+          label="Company name"
+          variant="standard"
+          className="w-full"
+          value={companyName}
+          onChange={(e) => {
+            setCompanyName(e.target.value);
+          }}
+        />
+        <TextField
+          label="Team number"
+          variant="standard"
+          className="w-full"
+          value={teamNumber}
+          onChange={(e) => {
+            setTeamNumber(e.target.value);
+          }}
+        />
+      </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>
@@ -190,6 +217,7 @@ const TeamDetail = () => {
               </TableRow>
             )}
           </TableBody>
+
           <TableFooter>
             <TableRow>
               <TableCell align="right" colSpan={3}>
