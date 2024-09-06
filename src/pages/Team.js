@@ -198,7 +198,7 @@ const Team = () => {
             ).map((team, index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row" sx={{ width: "50px" }}>
-                  {index + 1}
+                  {page * rowsPerPage + index + 1}
                 </TableCell>
                 <TableCell align="center" sx={{ width: "150px" }}>
                   {team.companyName}

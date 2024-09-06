@@ -221,7 +221,7 @@ const Location = () => {
             ).map((location, index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row" sx={{ width: "70px" }}>
-                  {index + 1}
+                  {page * rowsPerPage + index + 1}
                 </TableCell>
                 <TableCell align="center">{location.name}</TableCell>
                 <TableCell align="center" sx={{ width: "120px" }}>

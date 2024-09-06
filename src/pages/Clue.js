@@ -289,7 +289,7 @@ const Clue = () => {
             ).map((clue, index) => (
               <TableRow key={index}>
                 <TableCell component="th" scope="row" sx={{ width: "100px" }}>
-                  {index + 1}
+                  {page * rowsPerPage + index + 1}
                 </TableCell>
                 <TableCell sx={{ width: "200px" }} align="center">
                   {clue.locationId.name}
