@@ -481,7 +481,7 @@ const AdminLayout = () => {
 
         <Box
           sx={{
-            position: "absolute",
+            position: "fixed",
             top: "50%",
             right: "45%",
             translate: "-50%, -50%",

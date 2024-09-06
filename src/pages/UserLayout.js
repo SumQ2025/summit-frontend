@@ -13,14 +13,14 @@ const UserLayout = () => {
       <>
         <Box
           sx={{
-            position: "absolute",
+            position: "fixed",
             top: "50%",
-            right: "45%",
+            right: "40%",
             translate: "-50%, -50%",
           }}
           className={isLoading === true ? "" : "hidden"}
         >
-          <CircularProgress size={60} sx={{ color: "white" }} />
+          <CircularProgress size={60} sx={{ color: "#2f94f3" }} />
         </Box>
         <Outlet context={{ setIsLoading }} />
       </>

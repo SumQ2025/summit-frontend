@@ -23,18 +23,19 @@ const UserPanel = () => {
     logoutUser();
   };
 
+  const init = async () => {
+    const userId = window.localStorage.getItem("userToken");
+    const param = { userId, locationId };
+    setIsLoading(true);
+    const response = await axios.post(`${SERVER_URL}/getCluesById`, param);
+    if (response.data.message === "success") {
+      setIsLoading(false);
+      setClues(response.data.clues);
+      setLocationName(response.data.locationName.name);
+    }
+  };
+
   useEffect(() => {
-    const init = async () => {
-      const userId = window.localStorage.getItem("userToken");
-      const param = { userId, locationId };
-      setIsLoading(true);
-      const response = await axios.post(`${SERVER_URL}/getCluesById`, param);
-      if (response.data.message === "success") {
-        setIsLoading(false);
-        setClues(response.data.clues);
-        setLocationName(response.data.locationName.name);
-      }
-    };
     init();
   }, []);
 
@@ -56,6 +57,7 @@ const UserPanel = () => {
               path={clue.path}
               uploadedPath={clue.uploadedPath}
               locationId={locationId}
+              init={init}
             />
           );
         })}

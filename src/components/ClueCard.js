@@ -28,6 +28,7 @@ const ClueCard = ({
   path,
   uploadedPath,
   locationId,
+  init,
 }) => {
   const [file, setFile] = useState(null);
   const [open, setOpen] = useState(false);
@@ -54,13 +55,9 @@ const ClueCard = ({
       formData.append("userId", window.localStorage.getItem("userToken"));
       formData.append("clueId", id);
 
-      const response = await axios.post(
-        //   "https://aqueous-plains-92900-147f689c2375.herokuapp.com/upload",
-        `${SERVER_URL}/upload`,
-        formData
-      );
+      const response = await axios.post(`${SERVER_URL}/upload`, formData);
       if (response.data.message === "success") {
-        window.location.reload();
+        init();
       }
     }
 
