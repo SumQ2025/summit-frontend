@@ -48,6 +48,7 @@ const Photo = () => {
       locationId,
       teamId,
     };
+    setIsLoading(true);
     const response = await axios.get(`${SERVER_URL}/downloadPhoto`, {
       params,
       responseType: "blob",
@@ -58,6 +59,7 @@ const Photo = () => {
     link.href = url;
     link.setAttribute("download", "summit.zip");
     document.body.appendChild(link);
+    setIsLoading(false);
     link.click();
     link.parentNode.removeChild(link);
 
