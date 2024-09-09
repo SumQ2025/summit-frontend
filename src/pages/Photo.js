@@ -180,7 +180,7 @@ const Photo = () => {
                       alt={photo.path}
                       className="w-full h-[250px]"
                     />
-                    <div className="flex flex-col mt-2">
+                    <div className="flex flex-col mt-2 h-[120px] overflow-hidden">
                       <span className="text-[20px]">{photo.clueId.title}</span>
                       <span> {photo.clueId.point} POINTS</span>
                       <span>{photo.clueId.description}</span>

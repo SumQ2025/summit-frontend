@@ -46,7 +46,6 @@ const ClueCard = ({
   useEffect(() => {
     async function upload() {
       if (!file) {
-        console.log("No file selected.");
         return;
       }
       const formData = new FormData();
