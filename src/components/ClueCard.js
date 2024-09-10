@@ -56,6 +56,7 @@ const ClueCard = ({
 
       const response = await axios.post(`${SERVER_URL}/upload`, formData);
       alert(response.data);
+      console.log(response.data.message);
       if (response.data.message === "success") {
         init();
       }
