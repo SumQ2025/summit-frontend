@@ -48,7 +48,6 @@ const ClueCard = ({
       if (!file) {
         return;
       }
-      alert('upload is working');
       const formData = new FormData();
       formData.append("file", file);
       formData.append("locationId", locationId);
@@ -56,6 +55,7 @@ const ClueCard = ({
       formData.append("clueId", id);
 
       const response = await axios.post(`${SERVER_URL}/upload`, formData);
+      alert(response.data);
       if (response.data.message === "success") {
         init();
       }
@@ -71,7 +71,6 @@ const ClueCard = ({
   };
 
   const handleFileChange = (e) => {
-    alert("file changed--------", e.target.files[0]);
     if (e.target.files) {
       setFile(e.target.files[0]);
     }
