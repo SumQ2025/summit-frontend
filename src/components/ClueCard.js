@@ -48,6 +48,7 @@ const ClueCard = ({
       if (!file) {
         return;
       }
+      alert('upload is working');
       const formData = new FormData();
       formData.append("file", file);
       formData.append("locationId", locationId);
@@ -70,6 +71,7 @@ const ClueCard = ({
   };
 
   const handleFileChange = (e) => {
+    alert("file changed--------", e.target.files[0]);
     if (e.target.files) {
       setFile(e.target.files[0]);
     }
