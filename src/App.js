@@ -23,7 +23,7 @@ function App() {
 
         <Route path="user/" element={<UserLayout />}>
           <Route path="panel" element={<UserPanel />} />
-          <Route path="location" element={<UserLocation />} />
+          {/* <Route path="location" element={<UserLocation />} /> */}
         </Route>
 
         <Route path="admin-login" element={<AdminLogin />} />

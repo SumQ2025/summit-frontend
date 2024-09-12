@@ -25,7 +25,7 @@ const UserLogin = () => {
     const response = await axios.post(`${SERVER_URL}/login`, param);
     if (response.data.message === "success") {
       window.localStorage.setItem("userToken", response.data.user._id);
-      navigate("/user/location");
+      navigate("/user/panel");
     } else {
       alert(response.data.message);
     }
