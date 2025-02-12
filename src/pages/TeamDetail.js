@@ -8,15 +8,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableFooter from "@mui/material/TableFooter";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
-
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -26,7 +25,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
-
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
@@ -86,7 +84,6 @@ const IOSSwitch = styled((props) => (
     }),
   },
 }));
-
 const TeamDetail = () => {
   const location = useLocation();
   const [page, setPage] = useState(0);
@@ -95,21 +92,16 @@ const TeamDetail = () => {
   const [companyName, setCompanyName] = useState("");
   const [teamNumber, setTeamNumber] = useState("");
   const { teamId } = location.state;
-
   const { setIsLoading } = useOutletContext();
-
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - locations.length) : 0;
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
   const handleSwitch = async (id) => {
     const updatedLocations = locations.map((location) => {
       if (location._id === id) {
@@ -119,7 +111,6 @@ const TeamDetail = () => {
     });
     setLocations(updatedLocations);
   };
-
   const saveTeamDetail = async () => {
     const param = {
       locations,
@@ -134,7 +125,6 @@ const TeamDetail = () => {
       window.location.href = "/admin/team";
     }
   };
-
   useEffect(() => {
     const fetchData = async () => {
       const param = {
@@ -150,10 +140,8 @@ const TeamDetail = () => {
       setCompanyName(response.data.team.companyName);
       setTeamNumber(response.data.team.teamNumber);
     };
-
     fetchData();
   }, []);
-
   return (
     <div className="w-[500px]">
       <div className="flex gap-5 mb-3 px-5">
@@ -217,10 +205,28 @@ const TeamDetail = () => {
               </TableRow>
             )}
           </TableBody>
-
           <TableFooter>
             <TableRow>
-              <TableCell align="right" colSpan={3}>
+              <TableCell align="right" colSpan={2}>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  colSpan={4}
+                  count={locations.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  slotProps={{
+                    select: {
+                      inputProps: {
+                        "aria-label": "rows per page",
+                      },
+                      native: true,
+                    },
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </TableCell>
+              <TableCell align="right">
                 <Button
                   variant="outlined"
                   color="primary"
@@ -237,5 +243,4 @@ const TeamDetail = () => {
     </div>
   );
 };
-
 export default TeamDetail;
